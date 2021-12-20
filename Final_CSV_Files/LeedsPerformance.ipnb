@@ -1,0 +1,256 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "id": "85d7c8b2",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "   MatchID        Date   Time  Season   Competition        Round  Day  \\\n",
+      "0        1  2015-08-08  12:30    2015  Championship  Matchweek 1  Sat   \n",
+      "1        2  2015-08-13  19:45    2015    League Cup  First round  Thu   \n",
+      "2        3  2015-08-16  15:00    2015  Championship  Matchweek 2  Sun   \n",
+      "\n",
+      "  Home_Away Result   GF   GA   Opponent  Poss  Attendance Captain Formation  \\\n",
+      "0      Home      D  1.0  1.0    Burnley   NaN     27672.0     NaN     4-3-3   \n",
+      "1      Away      L  1.0  1.0  Doncaster   NaN      8361.0     NaN       NaN   \n",
+      "2      Away      D  0.0  0.0    Reading   NaN     21581.0     NaN     4-3-3   \n",
+      "\n",
+      "          Referee                                              Notes  \n",
+      "0    Kevin Friend                                                NaN  \n",
+      "1      Keith Hill  Doncaster won on penalty kicks following extra...  \n",
+      "2  Chris Kavanagh                                                NaN  \n"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import seaborn as sb\n",
+    "import matplotlib.pyplot as plt\n",
+    "perf=pd.read_csv('LUFC_FixturesResults.csv')\n",
+    "print(perf.head(3))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "id": "4511447b",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0    Liam Cooper\n",
+      "dtype: object\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "0      Liam Cooper\n",
+       "1      Liam Cooper\n",
+       "2      Liam Cooper\n",
+       "3      Liam Cooper\n",
+       "4      Liam Cooper\n",
+       "          ...     \n",
+       "289    Liam Cooper\n",
+       "290    Liam Cooper\n",
+       "291    Liam Cooper\n",
+       "292    Liam Cooper\n",
+       "293    Liam Cooper\n",
+       "Name: Captain, Length: 294, dtype: object"
+      ]
+     },
+     "execution_count": 54,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Missing Values in Captain is treated using Mode\n",
+    "abc=perf.Captain.mode()\n",
+    "print(abc)\n",
+    "perf.Captain.fillna(perf.Captain.mode()[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "id": "8c710652",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0    4-1-4-1\n",
+      "dtype: object\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "0        4-3-3\n",
+       "1      4-1-4-1\n",
+       "2        4-3-3\n",
+       "3      4-2-3-1\n",
+       "4      4-2-3-1\n",
+       "        ...   \n",
+       "289    4-1-4-1\n",
+       "290    4-1-4-1\n",
+       "291    4-1-4-1\n",
+       "292    4-1-4-1\n",
+       "293    4-1-4-1\n",
+       "Name: Formation, Length: 294, dtype: object"
+      ]
+     },
+     "execution_count": 55,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Missing Values in Formation is treated using Mode\n",
+    "form=perf.Formation.mode()\n",
+    "print(form)\n",
+    "perf.Formation.fillna(perf.Formation.mode()[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "id": "1d129eb5",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0    63.0\n",
+      "dtype: float64\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "0      63.0\n",
+       "1      63.0\n",
+       "2      63.0\n",
+       "3      63.0\n",
+       "4      63.0\n",
+       "       ... \n",
+       "289    63.0\n",
+       "290    63.0\n",
+       "291    63.0\n",
+       "292    63.0\n",
+       "293    63.0\n",
+       "Name: Poss, Length: 294, dtype: float64"
+      ]
+     },
+     "execution_count": 56,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Missing Values in Poss is treated using Mode\n",
+    "poss=perf.Poss.mode()\n",
+    "print(poss)\n",
+    "perf.Poss.fillna(perf.Poss.mode()[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 57,
+   "id": "80279b26",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1.406015037593985\n",
+      "1.1541353383458646\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "0      D\n",
+       "1      L\n",
+       "2      D\n",
+       "3      D\n",
+       "4      D\n",
+       "      ..\n",
+       "289    W\n",
+       "290    W\n",
+       "291    W\n",
+       "292    W\n",
+       "293    W\n",
+       "Name: Result, Length: 294, dtype: object"
+      ]
+     },
+     "execution_count": 57,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Future Matches GA and GF are predicted using Mean and Result is Calculated\n",
+    "gf=perf.GF.mean()\n",
+    "ga=perf.GA.mean()\n",
+    "print(gf)\n",
+    "print(ga)\n",
+    "lgf=2\n",
+    "lga=1\n",
+    "results=\"W\"\n",
+    "perf.GF.fillna(lgf)\n",
+    "perf.GA.fillna(lga)\n",
+    "perf.Result.fillna(results)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "380069a0",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "5dd4f468",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.8.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
